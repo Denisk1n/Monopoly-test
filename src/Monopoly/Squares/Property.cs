@@ -26,4 +26,25 @@ public abstract class Property : Square
     {
         Owner = player;
     }
+
+    public override void OnLand(Player player, Game game)
+    {
+        if (Owner == null)
+        {
+            game.OfferPurchase(player, this);
+            return;
+        }
+
+        if (Owner == player)
+        {
+            game.Log("Это ваша собственность, ничего не происходит.");
+            return;
+        }
+
+        int rent = CalculateRent(game);
+        game.Log($"{player.Name} платит аренду {rent} игроку {Owner.Name}");
+        game.ChargePayment(player, Owner, rent);
+    }
+
+    public abstract int CalculateRent(Game game);
 }
