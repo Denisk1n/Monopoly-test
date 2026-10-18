@@ -4,10 +4,15 @@ public class Player
 {
     public const int BoardSize = 40;
     public const int GoReward = 200;
+    public const int JailPosition = 10;
+    public const int JailTurnsToLeave = 3;
 
     public string Name { get; }
     public int Cash { get; private set; }
     public int Position { get; private set; }
+    public bool InJail { get; private set; }
+    public int JailTurns { get; private set; }
+    public bool Bankrupt { get; private set; }
 
     public Player(string name, int cash)
     {
@@ -58,6 +63,41 @@ public class Player
     public bool CanAfford(int amount)
     {
         return Cash >= amount;
+    }
+
+    public void SendToJail()
+    {
+        Position = JailPosition;
+        InJail = true;
+        JailTurns = 0;
+    }
+
+    // Вызывается каждый ход, пока игрок в тюрьме.
+    // После 3-го пропущенного хода игрок выходит
+    public bool TryLeaveJail()
+    {
+        if (!InJail)
+        {
+            return true;
+        }
+
+        JailTurns++;
+
+        if (JailTurns >= JailTurnsToLeave)
+        {
+            InJail = false;
+            JailTurns = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void DeclareBankrupt()
+    {
+        Bankrupt = true;
+        Cash = 0;
+        InJail = false;
     }
 
     public override string ToString()
