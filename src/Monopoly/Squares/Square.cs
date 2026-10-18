@@ -14,4 +14,9 @@ public abstract class Square
     }
 
     public abstract void OnLand(Player player, Game game);
+
+    public override string ToString()
+    {
+        return $"{Position}. {Name}";
+    }
 }
