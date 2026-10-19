@@ -44,7 +44,33 @@ public class Street : Property
             return RentLevels[HouseCount];
         }
 
+        // если у владельца вся цветовая группа - аренда без домов двойная
+        if (Owner != null && game.Board.OwnsWholeGroup(Owner, ColorGroup))
+        {
+            return RentLevels[0] * 2;
+        }
+
         return RentLevels[0];
+    }
+
+    public bool CanBuild(Player player, Board board)
+    {
+        if (Owner != player || HasHotel)
+        {
+            return false;
+        }
+
+        if (!board.OwnsWholeGroup(player, ColorGroup))
+        {
+            return false;
+        }
+
+        if (!board.IsBuildingEven(this))
+        {
+            return false;
+        }
+
+        return player.CanAfford(HouseCost);
     }
 
     public void AddHouse()
