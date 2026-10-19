@@ -4,6 +4,13 @@ namespace Monopoly;
 // Полностью класс пишется в части 4
 public class Game
 {
+    public Board Board { get; }
+
+    public Game(Board board)
+    {
+        Board = board;
+    }
+
     // TODO: покупка или аукцион (часть 4)
     public void OfferPurchase(Player player, Property property)
     {
