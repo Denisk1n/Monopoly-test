@@ -42,4 +42,9 @@ public class Board
     {
         return _squares.OfType<Railroad>().Count(r => r.Owner == player);
     }
+
+    public int CountUtilitiesOf(Player player)
+    {
+        return _squares.OfType<Utility>().Count(u => u.Owner == player);
+    }
 }

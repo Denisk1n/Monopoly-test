@@ -5,10 +5,12 @@ namespace Monopoly;
 public class Game
 {
     public Board Board { get; }
+    public Dice Dice { get; }
 
-    public Game(Board board)
+    public Game(Board board, Dice dice)
     {
         Board = board;
+        Dice = dice;
     }
 
     // TODO: покупка или аукцион (часть 4)
