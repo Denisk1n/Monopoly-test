@@ -37,4 +37,9 @@ public class Board
         return GetStreetsInGroup(street.ColorGroup)
             .All(s => s.GetBuildingLevel() >= street.GetBuildingLevel());
     }
+
+    public int CountRailroadsOf(Player player)
+    {
+        return _squares.OfType<Railroad>().Count(r => r.Owner == player);
+    }
 }
