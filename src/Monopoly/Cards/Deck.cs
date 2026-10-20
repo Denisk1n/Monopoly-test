@@ -38,4 +38,30 @@ public class Deck
             (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
         }
     }
+
+    public static Deck CreateChanceDeck()
+    {
+        var cards = new List<Card>
+        {
+            new Card("Штраф за превышение скорости: заплатите 15", EffectType.Fine, amount: 15),
+            new Card("Вы выиграли конкурс кроссвордов: получите 100", EffectType.Bonus, amount: 100),
+            new Card("Отправляйтесь на Старт", EffectType.MoveTo, targetPosition: 0),
+            new Card("Отправляйтесь на ул. Арбат", EffectType.MoveTo, targetPosition: 39),
+            new Card("Отправляйтесь в тюрьму", EffectType.GoToJail)
+        };
+        return new Deck("Шанс", cards);
+    }
+
+    public static Deck CreateCommunityChestDeck()
+    {
+        var cards = new List<Card>
+        {
+            new Card("Ошибка в расчётах в вашу пользу: получите 200", EffectType.Bonus, amount: 200),
+            new Card("Оплата лечения: заплатите 50", EffectType.Fine, amount: 50),
+            new Card("Возврат налога: получите 20", EffectType.Bonus, amount: 20),
+            new Card("Отправляйтесь на Старт", EffectType.MoveTo, targetPosition: 0),
+            new Card("Отправляйтесь в тюрьму", EffectType.GoToJail)
+        };
+        return new Deck("Общая казна", cards);
+    }
 }
