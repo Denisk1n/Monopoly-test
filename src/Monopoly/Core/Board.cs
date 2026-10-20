@@ -55,6 +55,28 @@ public class Board
         return _squares.OfType<Utility>().Count(u => u.Owner == player);
     }
 
+    // При банкротстве перед игроком всё имущество переходит кредитору
+    public void TransferProperties(Player from, Player to)
+    {
+        foreach (Property property in GetPropertiesOf(from))
+        {
+            property.SetOwner(to);
+        }
+    }
+
+    // При банкротстве из-за налога/штрафа клетки становятся свободными
+    public void ReleaseProperties(Player player)
+    {
+        foreach (Property property in GetPropertiesOf(player))
+        {
+            if (property is Street street)
+            {
+                street.ClearBuildings();
+            }
+            property.SetOwner(null);
+        }
+    }
+
     public static Board CreateStandard(Deck chanceDeck, Deck communityChestDeck)
     {
         var squares = new Square[]
