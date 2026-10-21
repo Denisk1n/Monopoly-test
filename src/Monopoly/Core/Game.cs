@@ -73,6 +73,48 @@ public class Game
         return Players.Where(p => !p.Bankrupt).ToList();
     }
 
+    public void PlayTurn()
+    {
+        if (Status != GameStatus.InProgress)
+        {
+            return;
+        }
+
+        Player player = GetCurrentPlayer();
+        Log($"--- Ход игрока {player.Name} (деньги: {player.Cash}) ---");
+
+        if (player.InJail)
+        {
+            bool released = player.TryLeaveJail();
+            if (released)
+            {
+                Log($"{player.Name} отсидел срок и в следующий ход выйдет из тюрьмы");
+            }
+            else
+            {
+                Log($"{player.Name} в тюрьме, пропущено ходов: {player.JailTurns}");
+            }
+
+            AdvanceToNextPlayer();
+            return;
+        }
+
+        int sum = Dice.Roll();
+        Log($"Выпало {Dice.Value1} и {Dice.Value2}, всего {sum}");
+
+        if (player.Move(sum))
+        {
+            Log($"{player.Name} прошёл Старт и получил {Player.GoReward}");
+        }
+
+        Square square = Board.GetSquare(player.Position);
+        Log($"{player.Name} попал на клетку: {square.Name}");
+        square.OnLand(player, this);
+
+        CheckGameOver();
+        AdvanceToNextPlayer();
+    }
+
     // TODO: покупка или аукцион
     public void OfferPurchase(Player player, Property property)
     {
