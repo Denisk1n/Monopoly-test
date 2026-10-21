@@ -179,9 +179,59 @@ public class Game
         return winner;
     }
 
-    // TODO: оплата и банкротство
+    // receiver = null, если деньги никому не идут (налог, штраф)
     public void ChargePayment(Player payer, Player? receiver, int amount)
     {
+        if (payer.CanAfford(amount))
+        {
+            payer.Pay(amount);
+            receiver?.Receive(amount);
+            return;
+        }
+
+        HandleBankruptcy(payer, receiver, amount);
+    }
+
+    public void HandleBankruptcy(Player debtor, Player? creditor, int amount)
+    {
+        // сначала пробуем продать дома за полцены
+        SellAllBuildings(debtor);
+
+        if (debtor.CanAfford(amount))
+        {
+            Log($"{debtor.Name} продал дома и смог заплатить");
+            debtor.Pay(amount);
+            creditor?.Receive(amount);
+            return;
+        }
+
+        Log($"{debtor.Name} не может заплатить {amount} и становится банкротом!");
+
+        if (creditor != null)
+        {
+            creditor.Receive(debtor.Cash);
+            Board.TransferProperties(debtor, creditor);
+        }
+        else
+        {
+            Board.ReleaseProperties(debtor);
+        }
+
+        debtor.DeclareBankrupt();
+        CheckGameOver();
+    }
+
+    private void SellAllBuildings(Player player)
+    {
+        foreach (Street street in Board.GetPropertiesOf(player).OfType<Street>())
+        {
+            int level = street.GetBuildingLevel();
+            if (level > 0)
+            {
+                player.Receive(level * street.HouseCost / 2);
+                street.ClearBuildings();
+            }
+        }
     }
 
     public void AdvanceToNextPlayer()
