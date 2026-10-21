@@ -234,6 +234,19 @@ public class Game
         }
     }
 
+    public bool BuildHouse(Player player, Street street)
+    {
+        if (!street.CanBuild(player, Board))
+        {
+            return false;
+        }
+
+        player.Pay(street.HouseCost);
+        street.AddHouse();
+        Log($"{player.Name} построил дом на «{street.Name}»");
+        return true;
+    }
+
     public void AdvanceToNextPlayer()
     {
         if (Status != GameStatus.InProgress)
