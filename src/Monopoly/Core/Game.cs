@@ -115,9 +115,68 @@ public class Game
         AdvanceToNextPlayer();
     }
 
-    // TODO: покупка или аукцион
+    public bool AskBuyDecision(Player player, Property property)
+    {
+        return _input.AskYesNo($"{player.Name}, купить «{property.Name}» за {property.Price}?");
+    }
+
     public void OfferPurchase(Player player, Property property)
     {
+        if (player.CanAfford(property.Price) && AskBuyDecision(player, property))
+        {
+            player.Pay(property.Price);
+            property.SetOwner(player);
+            Log($"{player.Name} купил «{property.Name}»");
+            return;
+        }
+
+        Log($"«{property.Name}» выставляется на аукцион");
+        StartAuction(property);
+    }
+
+    // Игроки по кругу делают ставки, 0 = пас.
+    // Аукцион идёт, пока не останется один лидер
+    public Player? StartAuction(Property property)
+    {
+        Auction = new Auction(property, GetActivePlayers());
+
+        while (!Auction.IsFinished())
+        {
+            foreach (Player bidder in Auction.Participants.ToList())
+            {
+                if (bidder == Auction.HighestBidder)
+                {
+                    continue;
+                }
+
+                int bid = _input.AskNumber(
+                    $"{bidder.Name}, ваша ставка за «{property.Name}» (сейчас {Auction.CurrentBid}, 0 - пас): ");
+
+                if (!Auction.PlaceBid(bidder, bid))
+                {
+                    Auction.Pass(bidder);
+                }
+
+                if (Auction.IsFinished())
+                {
+                    break;
+                }
+            }
+        }
+
+        Player? winner = Auction.Conclude();
+
+        if (winner != null)
+        {
+            Log($"Аукцион выиграл {winner.Name} за {Auction.CurrentBid}");
+        }
+        else
+        {
+            Log("Ставок не было, клетка остаётся свободной");
+        }
+
+        Auction = null;
+        return winner;
     }
 
     // TODO: оплата и банкротство
