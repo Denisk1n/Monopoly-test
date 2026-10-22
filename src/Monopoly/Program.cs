@@ -35,13 +35,22 @@ public static class Program
             Player player = game.GetCurrentPlayer();
             Console.WriteLine();
             Console.WriteLine($"Ходит {player}");
-            Console.WriteLine("1 - бросить кубики, 0 - выход");
+            Console.WriteLine("1 - бросить кубики, 2 - построить дом, 3 - мои владения, 4 - все игроки, 0 - выход");
 
             int choice = input.AskNumber("> ");
             switch (choice)
             {
                 case 1:
                     game.PlayTurn();
+                    break;
+                case 2:
+                    BuildMenu(game, player, input);
+                    break;
+                case 3:
+                    ShowProperties(game, player);
+                    break;
+                case 4:
+                    ShowPlayers(game);
                     break;
                 case 0:
                     Console.WriteLine("Игра прервана.");
@@ -54,5 +63,62 @@ public static class Program
 
         Console.WriteLine();
         Console.WriteLine($"Игра окончена! Победитель: {game.GetWinner()?.Name}");
+    }
+
+    private static void BuildMenu(Game game, Player player, IInput input)
+    {
+        List<Street> streets = game.Board.GetPropertiesOf(player)
+            .OfType<Street>()
+            .Where(s => s.CanBuild(player, game.Board))
+            .ToList();
+
+        if (streets.Count == 0)
+        {
+            Console.WriteLine("Строить пока негде: нужна вся цветовая группа и деньги на дом.");
+            return;
+        }
+
+        foreach (Street street in streets)
+        {
+            Console.WriteLine($"{street.Position}. {street.Name} (домов: {street.HouseCount}, цена дома: {street.HouseCost})");
+        }
+
+        int position = input.AskNumber("Номер клетки: ");
+        Street? chosen = streets.FirstOrDefault(s => s.Position == position);
+
+        if (chosen == null || !game.BuildHouse(player, chosen))
+        {
+            Console.WriteLine("Построить не получилось");
+        }
+    }
+
+    private static void ShowProperties(Game game, Player player)
+    {
+        List<Property> properties = game.Board.GetPropertiesOf(player);
+
+        if (properties.Count == 0)
+        {
+            Console.WriteLine("У вас пока ничего нет.");
+            return;
+        }
+
+        foreach (Property property in properties)
+        {
+            string extra = "";
+            if (property is Street street)
+            {
+                extra = street.HasHotel ? ", отель" : $", домов: {street.HouseCount}";
+            }
+            Console.WriteLine($"{property.Position}. {property.Name}{extra}");
+        }
+    }
+
+    private static void ShowPlayers(Game game)
+    {
+        foreach (Player p in game.Players)
+        {
+            string status = p.Bankrupt ? " - банкрот" : p.InJail ? " - в тюрьме" : "";
+            Console.WriteLine($"{p}{status}");
+        }
     }
 }
