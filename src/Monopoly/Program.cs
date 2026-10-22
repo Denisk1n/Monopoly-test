@@ -34,7 +34,7 @@ public static class Program
         {
             Player player = game.GetCurrentPlayer();
             Console.WriteLine();
-            Console.WriteLine($"Ходит {player}");
+            Console.WriteLine($"Ходит {Describe(game, player)}");
             Console.WriteLine("1 - бросить кубики, 2 - построить дом, 3 - мои владения, 4 - все игроки, 0 - выход");
 
             int choice = input.AskNumber("> ");
@@ -113,12 +113,19 @@ public static class Program
         }
     }
 
+    // Как Player.ToString, но вместо номера клетки - номер и название
+    private static string Describe(Game game, Player player)
+    {
+        Square square = game.Board.GetSquare(player.Position);
+        return $"{player.Name} (деньги: {player.Cash}, клетка: {square})";
+    }
+
     private static void ShowPlayers(Game game)
     {
         foreach (Player p in game.Players)
         {
             string status = p.Bankrupt ? " - банкрот" : p.InJail ? " - в тюрьме" : "";
-            Console.WriteLine($"{p}{status}");
+            Console.WriteLine($"{Describe(game, p)}{status}");
         }
     }
 }
