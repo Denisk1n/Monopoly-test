@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{97FA001B-05D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monopoly", "src\Monopoly\Monopoly.csproj", "{A1DE7187-D0AD-45A6-BFC0-B8F5691D6AD6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{151EA9F3-1AF7-4DF3-BFAD-5BB53621A29E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monopoly.Tests", "tests\Monopoly.Tests\Monopoly.Tests.csproj", "{39D8FB22-BF63-4B03-AB27-60D704E94E6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{A1DE7187-D0AD-45A6-BFC0-B8F5691D6AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1DE7187-D0AD-45A6-BFC0-B8F5691D6AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1DE7187-D0AD-45A6-BFC0-B8F5691D6AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D8FB22-BF63-4B03-AB27-60D704E94E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D8FB22-BF63-4B03-AB27-60D704E94E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D8FB22-BF63-4B03-AB27-60D704E94E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D8FB22-BF63-4B03-AB27-60D704E94E6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A1DE7187-D0AD-45A6-BFC0-B8F5691D6AD6} = {97FA001B-05DB-44D2-9CA2-36A5A9B862CC}
+		{39D8FB22-BF63-4B03-AB27-60D704E94E6B} = {151EA9F3-1AF7-4DF3-BFAD-5BB53621A29E}
 	EndGlobalSection
 EndGlobal
